@@ -9,6 +9,9 @@ class FolderFunc:
     def __init__(self, base_path):
         self.base_path = base_path
 
+    def check_connection(self):
+        return os.path.isdir(self.base_path)
+
     def is_entry_directory(self, relative_path):
         abs_path = os.path.join(self.base_path, relative_path)
         return os.path.isdir(abs_path)

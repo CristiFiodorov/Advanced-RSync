@@ -62,10 +62,14 @@ class FolderFunc:
         if os.path.exists(abs_path):
             return 0
 
-        os.mkdir(abs_path)
-        time.sleep(1)
+        try:
+            os.mkdir(abs_path)
+            time.sleep(1)
 
-        return os.path.getmtime(abs_path)
+            return os.path.getmtime(abs_path)
+        except FileNotFoundError as e:
+            print(e)
+            return 0
 
     def delete(self, relative_path):
         if not self.check_connection():

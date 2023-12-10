@@ -30,7 +30,6 @@ class ZipFunc:
             paths = []
             with zipfile.ZipFile(self.base_path, 'r') as zip_file:
                 for item in zip_file.infolist():
-                    print(item.filename)
                     name = item.filename
                     mtime = datetime(*item.date_time).timestamp()
                     is_dir = self.is_dir(name)

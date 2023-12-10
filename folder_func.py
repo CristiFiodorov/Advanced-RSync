@@ -12,11 +12,14 @@ class FolderFunc:
     def check_connection(self):
         return os.path.isdir(self.base_path)
 
-    def is_entry_directory(self, relative_path):
+    def is_dir(self, relative_path):
         abs_path = os.path.join(self.base_path, relative_path)
         return os.path.isdir(abs_path)
 
     def get_paths(self):
+        if not self.check_connection():
+            return []
+
         paths_name = []
         for root, directories, files in os.walk(self.base_path):
             paths_name.extend([os.path.join(root, directory) for directory in directories])
@@ -33,6 +36,9 @@ class FolderFunc:
         return paths
 
     def mkfile(self, relative_path, new_data):
+        if not self.check_connection():
+            return 0
+
         abs_path = os.path.join(self.base_path, relative_path)
 
         if os.path.exists(abs_path):
@@ -48,6 +54,9 @@ class FolderFunc:
         return mtime
 
     def mkdir(self, relative_path):
+        if not self.check_connection():
+            return 0
+
         abs_path = os.path.join(self.base_path, relative_path)
 
         if os.path.exists(abs_path):
@@ -59,23 +68,31 @@ class FolderFunc:
         return os.path.getmtime(abs_path)
 
     def delete(self, relative_path):
+        if not self.check_connection():
+            return False
+
         abs_path = os.path.join(self.base_path, relative_path)
 
         if not os.path.exists(abs_path):
-            return
+            return False
 
         if os.path.isdir(abs_path):
             shutil.rmtree(abs_path)
         else:
             os.remove(abs_path)
 
+        return True
+
     def delete_dir(self, relative_path):
-        self.delete(relative_path)
+        return self.delete(relative_path)
 
     def delete_file(self, relative_path):
-        self.delete(relative_path)
+        return self.delete(relative_path)
 
     def replace(self, relative_path, new_data):
+        if not self.check_connection():
+            return 0
+
         abs_path = os.path.join(self.base_path, relative_path)
 
         if not os.path.exists(abs_path):
@@ -88,6 +105,9 @@ class FolderFunc:
         return os.path.getmtime(abs_path)
 
     def get_data(self, relative_path):
+        if not self.check_connection():
+            return None
+
         abs_path = os.path.join(self.base_path, relative_path)
 
         if not os.path.exists(abs_path) or not os.path.isfile(abs_path):
@@ -99,6 +119,9 @@ class FolderFunc:
         return data
 
     def move(self, relative_path, relative_dest_path):
+        if not self.check_connection():
+            return 0
+
         abs_path = os.path.join(self.base_path, relative_path)
         abs_dest_path = os.path.join(self.base_path, relative_dest_path)
 

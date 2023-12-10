@@ -20,7 +20,10 @@ class FtpFunc:
             print(e)
             return False
 
-    def is_entry_directory(self, relative_path):
+    def is_dir(self, relative_path):
+        if not self.check_connection():
+            return False
+
         try:
             with FTP(self.host) as ftp:
                 ftp.login(self.username, self.password)
@@ -33,6 +36,9 @@ class FtpFunc:
             return False
 
     def get_paths(self):
+        if not self.check_connection():
+            return []
+
         try:
             with FTP(self.host) as ftp:
                 ftp.login(self.username, self.password)
@@ -72,6 +78,9 @@ class FtpFunc:
             return []
 
     def mkfile(self, relative_path, new_data):
+        if not self.check_connection():
+            return 0
+
         relative_path = relative_path.replace("\\", "/")
         try:
             with FTP(self.host) as ftp:
@@ -93,6 +102,9 @@ class FtpFunc:
             return 0
 
     def mkdir(self, relative_path):
+        if not self.check_connection():
+            return 0
+
         relative_path = relative_path.replace("\\", "/")
         try:
             with FTP(self.host) as ftp:
@@ -113,6 +125,9 @@ class FtpFunc:
             return 0
 
     def delete_dir(self, relative_path):
+        if not self.check_connection():
+            return False
+
         relative_path = relative_path.replace("\\", "/")
         try:
             with FTP(self.host) as ftp:
@@ -124,9 +139,14 @@ class FtpFunc:
 
         except Exception as e:
             print(e)
-            pass
+            return False
+
+        return True
 
     def delete_file(self, relative_path):
+        if not self.check_connection():
+            return False
+
         relative_path = relative_path.replace("\\", "/")
         try:
             with FTP(self.host) as ftp:
@@ -139,9 +159,14 @@ class FtpFunc:
 
         except Exception as e:
             print(e)
-            pass
+            return False
+
+        return True
 
     def replace(self, relative_path, new_data):
+        if not self.check_connection():
+            return 0
+
         relative_path = relative_path.replace("\\", "/")
         try:
             with FTP(self.host) as ftp:
@@ -166,6 +191,9 @@ class FtpFunc:
             return 0
 
     def get_data(self, relative_path):
+        if not self.check_connection():
+            return None
+
         relative_path = relative_path.replace("\\", "/")
         try:
             with FTP(self.host) as ftp:
@@ -182,6 +210,9 @@ class FtpFunc:
             return None
 
     def move(self, relative_path, relative_dest_path):
+        if not self.check_connection():
+            return 0
+
         try:
             with FTP(self.host) as ftp:
                 ftp.login(self.username, self.password)

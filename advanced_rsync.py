@@ -1,30 +1,26 @@
 from folder_func import *
 from ftp_func import *
+from zip_func import *
 
 
 def main():
-    ftp_f = FtpFunc('/', '127.0.0.1', 'rsync-user', '123123')
+    zip_f = ZipFunc(r'D:\Test.zip')
 
-    print(ftp_f.check_connection())
-    ftp_f.delete_dir('ceva')
+    zip_f.mkdir('pop')
 
-    ftp_f.mkdir('ceva')
+    print(zip_f.get_paths())
 
-    ftp_f.mkdir('ceva/altceva')
+    data = zip_f.get_data('Test/LOL.txt')
 
-    print(ftp_f.is_entry_directory('ceva'))
+    zip_f.mkfile('pop/ceva.txt', data)
 
-    ftp_f.mkfile('ceva/altceva/file.txt', b'Hello, aici')
+    zip_f.delete_dir('pop')
 
-    ftp_f.replace('ceva/altceva/file.txt', b'Hello, acolo')
+    zip_f.mkdir('pop2')
 
-    print(ftp_f.get_paths())
+    zip_f.move_file('Test/LOL.txt', 'LOL.txt')
 
-    ftp_f.move_file('ceva/altceva/file.txt', 'ceva/file2.txt')
-
-    print(ftp_f.get_paths())
-
-    print(ftp_f.get_data('ceva/file2.txt'))
+    zip_f.make('Test/LOL.txt', data)
 
 
 if __name__ == '__main__':

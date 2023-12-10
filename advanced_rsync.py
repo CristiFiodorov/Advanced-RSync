@@ -9,7 +9,8 @@ def main():
     folder_f = FolderFunc(r'D:\Test')
     ftp_f = FtpFunc('/', '127.0.0.1', 'rsync-user', '123123')
 
-    init_sync(zip_f, ftp_f)
+    files_map = init_sync(zip_f, ftp_f)
+    print(files_map)
 
 
 if __name__ == '__main__':

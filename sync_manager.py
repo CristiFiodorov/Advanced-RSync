@@ -50,3 +50,31 @@ class SyncManager:
                 else:
                     data = self.location_func[1].get_data(path2.name)
                     self.files_map[path2.name][0] = self.location_func[0].mkfile(path2.name, data)
+
+    def sync_location(self, number):
+        other_number = 1 if number == 0 else 0
+
+        changes = find_changes(self.location_func[number], self.files_map, number)
+
+        print(number, changes)
+
+        for file_name, mtime, mod, is_dir in changes:
+            if mod == ModificationType.MOD:
+                self.files_map[file_name][number] = mtime
+                if is_dir:
+                    continue
+                data = self.location_func[number].get_data(file_name)
+                if data:
+                    self.files_map[file_name][other_number] = self.location_func[other_number].replace(file_name, data)
+
+    def sync(self):
+        self.init_sync()
+
+        while True:
+            try:
+                time.sleep(5)
+                self.sync_location(0)
+                self.sync_location(1)
+            except KeyboardInterrupt as e:
+                print("Exit")
+                return

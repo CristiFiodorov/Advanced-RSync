@@ -11,7 +11,7 @@ def main():
 
     sync_manager = SyncManager(zip_f, ftp_f)
 
-    sync_manager.init_sync()
+    sync_manager.sync()
 
 
 if __name__ == '__main__':

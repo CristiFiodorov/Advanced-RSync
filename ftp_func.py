@@ -1,13 +1,14 @@
 import ftplib
 from ftplib import FTP
 from ftp_utils import *
+from location_func import LocationFunc
 from path import Path
 from io import BytesIO
 
 
-class FtpFunc:
+class FtpFunc(LocationFunc):
     def __init__(self, base_path, host, username, password):
-        self.base_path = base_path
+        super().__init__(base_path)
         self.host = host
         self.username = username
         self.password = password

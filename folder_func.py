@@ -1,13 +1,14 @@
 import os
 from file_utils import wait_file
 import time
+from location_func import LocationFunc
 from path import Path
 import shutil
 
 
-class FolderFunc:
+class FolderFunc(LocationFunc):
     def __init__(self, base_path):
-        self.base_path = base_path
+        super().__init__(base_path)
 
     def check_connection(self):
         return os.path.isdir(self.base_path)

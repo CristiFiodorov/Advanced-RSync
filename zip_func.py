@@ -1,13 +1,14 @@
 import zipfile
 import os
 from datetime import datetime
+from location_func import LocationFunc
 from path import Path
 import time
 
 
-class ZipFunc:
+class ZipFunc(LocationFunc):
     def __init__(self, base_path):
-        self.base_path = base_path
+        super().__init__(base_path)
 
     def check_connection(self):
         try:

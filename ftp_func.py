@@ -208,32 +208,3 @@ class FtpFunc:
         except Exception as e:
             print(e)
             return None
-
-    def move(self, relative_path, relative_dest_path):
-        if not self.check_connection():
-            return 0
-
-        try:
-            with FTP(self.host) as ftp:
-                ftp.login(self.username, self.password)
-                abs_path = self.base_path + "/" + relative_path
-                abs_dest_path = self.base_path + "/" + relative_dest_path
-
-                ftp.rename(abs_path, abs_dest_path)
-
-                timestamp = ftp.sendcmd(f"MDTM {abs_dest_path}")[4:]
-                mtime = get_unix_timestamp(timestamp)
-
-                print(f"File '{abs_path}' was moved to {abs_dest_path} on the FTP server.")
-
-                return mtime
-
-        except Exception as e:
-            print(e)
-            return 0
-
-    def move_dir(self, relative_path, relative_dest_path):
-        return self.move(relative_path.replace("\\", "/"), relative_dest_path.replace("\\", "/"))
-
-    def move_file(self, relative_path, relative_dest_path):
-        return self.move(relative_path.replace("\\", "/"), relative_dest_path.replace("\\", "/"))

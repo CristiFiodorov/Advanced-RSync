@@ -71,7 +71,7 @@ class FolderFunc:
             print(e)
             return 0
 
-    def delete(self, relative_path):
+    def _delete(self, relative_path):
         if not self.check_connection():
             return False
 
@@ -88,10 +88,10 @@ class FolderFunc:
         return True
 
     def delete_dir(self, relative_path):
-        return self.delete(relative_path)
+        return self._delete(relative_path)
 
     def delete_file(self, relative_path):
-        return self.delete(relative_path)
+        return self._delete(relative_path)
 
     def replace(self, relative_path, new_data):
         if not self.check_connection():
@@ -121,24 +121,3 @@ class FolderFunc:
             data = file.read()
 
         return data
-
-    def move(self, relative_path, relative_dest_path):
-        if not self.check_connection():
-            return 0
-
-        abs_path = os.path.join(self.base_path, relative_path)
-        abs_dest_path = os.path.join(self.base_path, relative_dest_path)
-
-        if not os.path.exists(abs_path) and os.path.exists(abs_dest_path):
-            return 0
-
-        os.rename(abs_path, abs_dest_path)
-        time.sleep(1)
-
-        return os.path.getmtime(abs_dest_path)
-
-    def move_dir(self, relative_path, relative_dest_path):
-        return self.move(relative_path, relative_dest_path)
-
-    def move_file(self, relative_path, relative_dest_path):
-        return self.move(relative_path, relative_dest_path)

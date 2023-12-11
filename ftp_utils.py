@@ -1,5 +1,4 @@
 import time
-import ftplib
 
 
 def is_entry_directory(ftp, path):

@@ -41,7 +41,7 @@ class ZipFunc:
         except:
             return []
 
-    def make(self, relative_path, new_data):
+    def _make(self, relative_path, new_data):
         if not self.check_connection():
             return 0
         try:
@@ -58,14 +58,14 @@ class ZipFunc:
             return 0
 
     def mkfile(self, relative_path, new_data):
-        return self.make(relative_path.replace("\\", "/"), new_data)
+        return self._make(relative_path.replace("\\", "/"), new_data)
 
     def mkdir(self, relative_path):
         if not relative_path.endswith("/"):
             relative_path += "/"
-        return self.make(relative_path.replace("\\", "/"), "")
+        return self._make(relative_path.replace("\\", "/"), "")
 
-    def delete(self, relative_path):
+    def _delete(self, relative_path):
         if not self.check_connection():
             return False
         try:
@@ -93,10 +93,10 @@ class ZipFunc:
     def delete_dir(self, relative_path):
         if not relative_path.endswith("/"):
             relative_path += "/"
-        return self.delete(relative_path.replace("\\", "/"))
+        return self._delete(relative_path.replace("\\", "/"))
 
     def delete_file(self, relative_path):
-        return self.delete(relative_path.replace("\\", "/"))
+        return self._delete(relative_path.replace("\\", "/"))
 
     def replace(self, relative_path, new_data):
         self.delete_file(relative_path)
@@ -112,30 +112,3 @@ class ZipFunc:
             return data
         except KeyError:
             return None
-
-    def move(self, relative_path, relative_dest_path):
-        if not self.check_connection():
-            return 0
-        mtime = 0
-        try:
-            with zipfile.ZipFile(self.base_path, 'a') as zip_file:
-                data = zip_file.read(relative_path)
-                zip_info = zipfile.ZipInfo(relative_dest_path)
-                zip_file.writestr(zip_info, data)
-                zip_info.date_time = time.localtime(time.time())
-                mtime = time.mktime(zip_info.date_time)
-        except Exception as e:
-            print(e)
-
-        self.delete(relative_path)
-        return mtime
-
-    def move_dir(self, relative_path, relative_dest_path):
-        if not relative_path.endswith("/"):
-            relative_path += "/"
-        if not relative_dest_path.endswith("/"):
-            relative_dest_path += "/"
-        return self.move(relative_path.replace("\\", "/"), relative_dest_path.replace("\\", "/"))
-
-    def move_file(self, relative_path, relative_dest_path):
-        return self.move(relative_path.replace("\\", "/"), relative_dest_path.replace("\\", "/"))

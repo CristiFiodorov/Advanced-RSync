@@ -66,6 +66,12 @@ class SyncManager:
                 data = self.location_func[number].get_data(file_name)
                 if data:
                     self.files_map[file_name][other_number] = self.location_func[other_number].replace(file_name, data)
+            if mod == ModificationType.DEL:
+                self.files_map.pop(file_name, None)
+                if is_dir:
+                    self.location_func[other_number].delete_dir(file_name)
+                else:
+                    self.location_func[other_number].delete_file(file_name)
 
     def sync(self):
         self.init_sync()

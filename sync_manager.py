@@ -1,9 +1,10 @@
 import time
 from find_changes import *
+from location_func import *
 
 
 class SyncManager:
-    def __init__(self, location_func1, location_func2):
+    def __init__(self, location_func1: LocationFunc, location_func2: LocationFunc):
         self.location_func = [location_func1, location_func2]
         self.files_map = dict()
 
@@ -51,7 +52,7 @@ class SyncManager:
                     data = self.location_func[1].get_data(path2.name)
                     self.files_map[path2.name][0] = self.location_func[0].mkfile(path2.name, data)
 
-    def sync_location(self, number):
+    def sync_location(self, number: int):
         other_number = 1 if number == 0 else 0
 
         changes = find_changes(self.location_func[number], self.files_map, number)

@@ -1,4 +1,6 @@
 from enum import Enum, auto
+from location_func import *
+from typing import List, Tuple
 
 
 class ModificationType(Enum):
@@ -7,7 +9,7 @@ class ModificationType(Enum):
     MK = auto()
 
 
-def find_changes(location_func, files_map, number):
+def find_changes(location_func: LocationFunc, files_map: dict, number: int) -> List[Tuple]:
     result = []
     items1 = [*files_map.items()]
     items2 = location_func.get_paths()

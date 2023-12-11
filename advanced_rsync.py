@@ -5,7 +5,7 @@ from sync_manager import *
 import sys
 
 
-def get_location_func(location):
+def get_location_func(location: str) -> LocationFunc | None:
     parts = location.split(":", 1)
     if len(parts) < 2:
         return None

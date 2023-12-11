@@ -1,7 +1,8 @@
 import time
+from ftplib import FTP
 
 
-def is_entry_directory(ftp, path):
+def is_entry_directory(ftp: FTP, path: str) -> bool:
     is_dir = False
     curr_path = ftp.pwd()
     try:
@@ -14,7 +15,7 @@ def is_entry_directory(ftp, path):
     return is_dir
 
 
-def get_unix_timestamp(timestamp):
+def get_unix_timestamp(timestamp: str) -> float:
     year = int(timestamp[0:4])
     month = int(timestamp[4:6])
     day = int(timestamp[6:8])
@@ -22,12 +23,12 @@ def get_unix_timestamp(timestamp):
     minute = int(timestamp[10:12])
     second = int(timestamp[12:14])
 
-    unix_timestamp = int(time.mktime((year, month, day, hour, minute, second, 0, 0, -1)))
+    unix_timestamp = time.mktime((year, month, day, hour, minute, second, 0, 0, -1))
 
     return unix_timestamp
 
 
-def recursive_ftp_delete(ftp, directory):
+def recursive_ftp_delete(ftp: FTP, directory: str):
     ftp.cwd(directory)
     files = ftp.nlst()
 

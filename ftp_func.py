@@ -1,5 +1,5 @@
 import ftplib
-from ftplib import FTP
+from typing import List
 from ftp_utils import *
 from location_func import LocationFunc
 from path import Path
@@ -7,13 +7,13 @@ from io import BytesIO
 
 
 class FtpFunc(LocationFunc):
-    def __init__(self, base_path, host, username, password):
+    def __init__(self, base_path: str, host: str, username: str, password: str):
         super().__init__(base_path)
         self.host = host
         self.username = username
         self.password = password
 
-    def check_connection(self):
+    def check_connection(self) -> bool:
         try:
             with ftplib.FTP(self.host, self.username, self.password, timeout=10):
                 return True
@@ -21,7 +21,7 @@ class FtpFunc(LocationFunc):
             print(e)
             return False
 
-    def is_dir(self, relative_path):
+    def is_dir(self, relative_path: str) -> bool:
         if not self.check_connection():
             return False
 
@@ -36,7 +36,7 @@ class FtpFunc(LocationFunc):
             print(e)
             return False
 
-    def get_paths(self):
+    def get_paths(self) -> List[Path]:
         if not self.check_connection():
             return []
 
@@ -78,7 +78,7 @@ class FtpFunc(LocationFunc):
             print(e)
             return []
 
-    def mkfile(self, relative_path, new_data):
+    def mkfile(self, relative_path: str, new_data: bytes) -> float:
         if not self.check_connection():
             return 0
 
@@ -99,10 +99,10 @@ class FtpFunc(LocationFunc):
                 return mtime
 
         except Exception as e:
-            print(e)
+            print(f"mkfile {relative_path}: {e}")
             return 0
 
-    def mkdir(self, relative_path):
+    def mkdir(self, relative_path: str) -> float:
         if not self.check_connection():
             return 0
 
@@ -122,10 +122,10 @@ class FtpFunc(LocationFunc):
                 return mtime
 
         except Exception as e:
-            print(e)
+            print(f"mkdir: {e}")
             return 0
 
-    def delete_dir(self, relative_path):
+    def delete_dir(self, relative_path: str) -> bool:
         if not self.check_connection():
             return False
 
@@ -144,7 +144,7 @@ class FtpFunc(LocationFunc):
 
         return True
 
-    def delete_file(self, relative_path):
+    def delete_file(self, relative_path: str) -> bool:
         if not self.check_connection():
             return False
 
@@ -164,7 +164,7 @@ class FtpFunc(LocationFunc):
 
         return True
 
-    def replace(self, relative_path, new_data):
+    def replace(self, relative_path: str, new_data: bytes) -> float:
         if not self.check_connection():
             return 0
 
@@ -191,7 +191,7 @@ class FtpFunc(LocationFunc):
             print(e)
             return 0
 
-    def get_data(self, relative_path):
+    def get_data(self, relative_path: str) -> None | bytes:
         if not self.check_connection():
             return None
 

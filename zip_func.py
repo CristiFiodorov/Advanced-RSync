@@ -1,23 +1,24 @@
 import zipfile
 import os
 from datetime import datetime
+from typing import List
 from location_func import LocationFunc
 from path import Path
 import time
 
 
 class ZipFunc(LocationFunc):
-    def __init__(self, base_path):
+    def __init__(self, base_path: str):
         super().__init__(base_path)
 
-    def check_connection(self):
+    def check_connection(self) -> bool:
         try:
             with zipfile.ZipFile(self.base_path, 'r'):
                 return True
         except:
             return False
 
-    def is_dir(self, relative_path):
+    def is_dir(self, relative_path: str) -> bool:
         if not self.check_connection():
             return False
         try:
@@ -26,7 +27,7 @@ class ZipFunc(LocationFunc):
         except:
             return False
 
-    def get_paths(self):
+    def get_paths(self) -> List[Path]:
         try:
             paths = []
             with zipfile.ZipFile(self.base_path, 'r') as zip_file:
@@ -42,7 +43,7 @@ class ZipFunc(LocationFunc):
         except:
             return []
 
-    def _make(self, relative_path, new_data):
+    def _make(self, relative_path: str, new_data: bytes) -> float:
         if not self.check_connection():
             return 0
         try:
@@ -58,15 +59,15 @@ class ZipFunc(LocationFunc):
         except:
             return 0
 
-    def mkfile(self, relative_path, new_data):
+    def mkfile(self, relative_path: str, new_data: bytes) -> float:
         return self._make(relative_path.replace("\\", "/"), new_data)
 
-    def mkdir(self, relative_path):
+    def mkdir(self, relative_path: str) -> float:
         if not relative_path.endswith("/"):
             relative_path += "/"
-        return self._make(relative_path.replace("\\", "/"), "")
+        return self._make(relative_path.replace("\\", "/"), b"")
 
-    def _delete(self, relative_path):
+    def _delete(self, relative_path: str) -> bool:
         if not self.check_connection():
             return False
         try:
@@ -91,19 +92,19 @@ class ZipFunc(LocationFunc):
                 continue
             return True
 
-    def delete_dir(self, relative_path):
+    def delete_dir(self, relative_path: str) -> bool:
         if not relative_path.endswith("/"):
             relative_path += "/"
         return self._delete(relative_path.replace("\\", "/"))
 
-    def delete_file(self, relative_path):
+    def delete_file(self, relative_path: str) -> bool:
         return self._delete(relative_path.replace("\\", "/"))
 
-    def replace(self, relative_path, new_data):
+    def replace(self, relative_path: str, new_data: bytes) -> float:
         self.delete_file(relative_path)
         return self.mkfile(relative_path, new_data)
 
-    def get_data(self, relative_path):
+    def get_data(self, relative_path: str) -> None | bytes:
         if not self.check_connection():
             return None
         try:

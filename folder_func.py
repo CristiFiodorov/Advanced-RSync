@@ -1,4 +1,5 @@
 import os
+from typing import List
 from file_utils import wait_file
 import time
 from location_func import LocationFunc
@@ -10,14 +11,14 @@ class FolderFunc(LocationFunc):
     def __init__(self, base_path):
         super().__init__(base_path)
 
-    def check_connection(self):
+    def check_connection(self) -> bool:
         return os.path.isdir(self.base_path)
 
-    def is_dir(self, relative_path):
+    def is_dir(self, relative_path: str) -> bool:
         abs_path = os.path.join(self.base_path, relative_path)
         return os.path.isdir(abs_path)
 
-    def get_paths(self):
+    def get_paths(self) -> List[Path]:
         if not self.check_connection():
             return []
 
@@ -36,7 +37,7 @@ class FolderFunc(LocationFunc):
 
         return paths
 
-    def mkfile(self, relative_path, new_data):
+    def mkfile(self, relative_path: str, new_data: bytes) -> float:
         if not self.check_connection():
             return 0
 
@@ -54,7 +55,7 @@ class FolderFunc(LocationFunc):
 
         return mtime
 
-    def mkdir(self, relative_path):
+    def mkdir(self, relative_path: str) -> float:
         if not self.check_connection():
             return 0
 
@@ -72,7 +73,7 @@ class FolderFunc(LocationFunc):
             print(e)
             return 0
 
-    def _delete(self, relative_path):
+    def _delete(self, relative_path: str) -> bool:
         if not self.check_connection():
             return False
 
@@ -88,13 +89,13 @@ class FolderFunc(LocationFunc):
 
         return True
 
-    def delete_dir(self, relative_path):
+    def delete_dir(self, relative_path: str) -> bool:
         return self._delete(relative_path)
 
-    def delete_file(self, relative_path):
+    def delete_file(self, relative_path: str) -> bool:
         return self._delete(relative_path)
 
-    def replace(self, relative_path, new_data):
+    def replace(self, relative_path: str, new_data: bytes) -> float:
         if not self.check_connection():
             return 0
 
@@ -109,7 +110,7 @@ class FolderFunc(LocationFunc):
 
         return os.path.getmtime(abs_path)
 
-    def get_data(self, relative_path):
+    def get_data(self, relative_path: str) -> None | bytes:
         if not self.check_connection():
             return None
 

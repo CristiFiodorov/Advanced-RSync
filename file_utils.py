@@ -3,7 +3,7 @@ import time
 import stat
 
 
-def wait_file(file_path):
+def wait_file(file_path: str) -> bool:
     for i in range(0, 10):
         try:
             with open(file_path, "rb"):

@@ -72,6 +72,15 @@ class SyncManager:
                     self.location_func[other_number].delete_dir(file_name)
                 else:
                     self.location_func[other_number].delete_file(file_name)
+            if mod == ModificationType.MK:
+                self.files_map[file_name] = [0, 0, is_dir]
+                self.files_map[file_name][number] = mtime
+                if is_dir:
+                    self.files_map[file_name][other_number] = self.location_func[other_number].mkdir(file_name)
+                else:
+                    data = self.location_func[number].get_data(file_name)
+                    if data:
+                        self.files_map[file_name][other_number] = self.location_func[other_number].mkfile(file_name, data)
 
     def sync(self):
         self.init_sync()

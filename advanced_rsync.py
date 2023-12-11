@@ -6,6 +6,16 @@ import sys
 
 
 def get_location_func(location: str) -> LocationFunc | None:
+    """
+    This function receives a string representing the location that will be monitored.
+    The following formats are accepted:
+        - ftp:user:password@URL/base_path
+        - zip:base_path
+        - folder:base_path
+    :param location: string representation of the location
+    :type location: str
+    :return: A class with all the functionality for the location
+    """
     parts = location.split(":", 1)
     if len(parts) < 2:
         return None

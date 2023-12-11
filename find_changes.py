@@ -10,6 +10,16 @@ class ModificationType(Enum):
 
 
 def find_changes(location_func: LocationFunc, files_map: dict, number: int) -> List[Tuple]:
+    """
+    This function search for all the changes that appeared in the location given
+    :param location_func: A class with all the functionality for a location
+    :type location_func: LocationFunc
+    :param files_map: A dictionary that has as keys the relative paths of files and as value a list with the format:
+        [mtime1, mtime2, is_dir]
+    :type files_map: dict
+    :param number: The index of the location in files_map values
+    :return:
+    """
     result_mod, result_del, result_mk = [], [], []
     items1 = [*files_map.items()]
     items2 = location_func.get_paths()

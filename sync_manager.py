@@ -8,7 +8,7 @@ class SyncManager:
         self.location_func = [location_func1, location_func2]
         self.files_map = dict()
 
-    def init_sync(self):
+    def _init_sync(self):
         self.files_map = dict()
         paths1 = self.location_func[0].get_paths()
         paths2 = self.location_func[1].get_paths()
@@ -52,7 +52,7 @@ class SyncManager:
                     data = self.location_func[1].get_data(path2.name)
                     self.files_map[path2.name][0] = self.location_func[0].mkfile(path2.name, data)
 
-    def sync_location(self, number: int):
+    def _sync_location(self, number: int):
         other_number = 1 if number == 0 else 0
 
         changes = find_changes(self.location_func[number], self.files_map, number)
@@ -84,13 +84,16 @@ class SyncManager:
                         self.files_map[file_name][other_number] = self.location_func[other_number].mkfile(file_name, data)
 
     def sync(self):
-        self.init_sync()
+        """
+        This method makes the initial synchronisation between the two location and keep them sync
+        """
+        self._init_sync()
 
         while True:
             try:
                 time.sleep(5)
-                self.sync_location(0)
-                self.sync_location(1)
+                self._sync_location(0)
+                self._sync_location(1)
             except KeyboardInterrupt as e:
                 print("Exit")
-                return
+                break

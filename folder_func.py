@@ -1,10 +1,14 @@
 import os
+import logging
 from typing import List
 from file_utils import wait_file
 import time
 from location_func import LocationFunc
 from path import Path
 import shutil
+
+
+logger = logging.getLogger(__name__)
 
 
 class FolderFunc(LocationFunc):
@@ -70,7 +74,7 @@ class FolderFunc(LocationFunc):
 
             return os.path.getmtime(abs_path)
         except FileNotFoundError as e:
-            print(e)
+            logger.error(str(e))
             return 0
 
     def _delete(self, relative_path: str) -> bool:

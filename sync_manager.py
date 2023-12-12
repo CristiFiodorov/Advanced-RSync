@@ -1,6 +1,9 @@
 import time
+import logging
 from find_changes import *
 from location_func import *
+
+logger = logging.getLogger(__name__)
 
 
 class SyncManager:
@@ -18,14 +21,21 @@ class SyncManager:
                 if path1.name == path2.name:
                     # exists in both locations
                     if path1.is_dir:
+                        logger.info(f"Folder {path1.name} exists in both locations!")
                         self.files_map[path1.name] = [path1.mtime, path2.mtime, path1.is_dir]
                         break
                     if path1.mtime > path2.mtime:
+                        logger.info(f"File {path1.name} exists in both location, but {self.location_func[0].base_path}"
+                                    f" has the newest version. {path1.name} will be copied to "
+                                    f"{self.location_func[1].base_path}")
                         self.files_map[path1.name] = [path1.mtime, 0, path1.is_dir]
                         data = self.location_func[0].get_data(path1.name)
                         if data:
                             self.files_map[path1.name][1] = self.location_func[1].replace(path1.name, data)
                     else:
+                        logger.info(f"File {path1.name} exists in both location, but {self.location_func[1].base_path}"
+                                    f" has the newest version. {path1.name} will be copied to "
+                                    f"{self.location_func[0].base_path}")
                         self.files_map[path2.name] = [0, path2.mtime, path2.is_dir]
                         data = self.location_func[1].get_data(path2.name)
                         if data:
@@ -34,6 +44,8 @@ class SyncManager:
                     break
             else:
                 # file/folder exists only in path1 not in path2
+                logger.info(f"File/Folder {path1.name} exists only in {self.location_func[0].base_path}. "
+                            f"{path1.name} will be copied to {self.location_func[1].base_path}")
                 self.files_map[path1.name] = [path1.mtime, 0, path1.is_dir]
                 if path1.is_dir:
                     self.files_map[path1.name][1] = self.location_func[1].mkdir(path1.name)
@@ -45,6 +57,8 @@ class SyncManager:
         for path2 in paths2:
             if path2.name not in path1_names:
                 # file/folder exists only in path2 not in path1
+                logger.info(f"File/Folder {path2.name} exists only in {self.location_func[1].base_path}. "
+                            f"{path2.name} will be copied to {self.location_func[2].base_path}")
                 self.files_map[path2.name] = [0, path2.mtime, path2.is_dir]
                 if path2.is_dir:
                     self.files_map[path2.name][0] = self.location_func[0].mkdir(path2.name)
@@ -56,11 +70,16 @@ class SyncManager:
         other_number = 1 if number == 0 else 0
 
         changes = find_changes(self.location_func[number], self.files_map, number)
+        if len(changes) == 0:
+            return
 
         print(number, changes)
+        logger.info(f"Location {self.location_func[number].base_path} has the following changes: {changes}")
 
         for file_name, mtime, mod, is_dir in changes:
             if mod == ModificationType.MOD:
+                logger.info(f"{file_name} has been modified in {self.location_func[number].base_path}. "
+                            f"Changes has been copied to {self.location_func[other_number].base_path}")
                 self.files_map[file_name][number] = mtime
                 if is_dir:
                     continue
@@ -68,12 +87,16 @@ class SyncManager:
                 if data:
                     self.files_map[file_name][other_number] = self.location_func[other_number].replace(file_name, data)
             if mod == ModificationType.DEL:
+                logger.info(f"{file_name} has been deleted in {self.location_func[number].base_path}. "
+                            f"File/Folder is being deleted in {self.location_func[other_number].base_path}")
                 self.files_map.pop(file_name, None)
                 if is_dir:
                     self.location_func[other_number].delete_dir(file_name)
                 else:
                     self.location_func[other_number].delete_file(file_name)
             if mod == ModificationType.MK:
+                logger.info(f"{file_name} has been created in {self.location_func[number].base_path}. "
+                            f"File/Folder is being created in {self.location_func[other_number].base_path}")
                 self.files_map[file_name] = [0, 0, is_dir]
                 self.files_map[file_name][number] = mtime
                 if is_dir:

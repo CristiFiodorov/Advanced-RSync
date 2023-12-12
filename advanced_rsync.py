@@ -1,8 +1,17 @@
+import logging
 from folder_func import *
 from ftp_func import *
 from zip_func import *
 from sync_manager import *
 import sys
+
+
+logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        filename='advanced_rsync.log',
+        filemode='w'
+    )
 
 
 def get_location_func(location: str) -> LocationFunc | None:
@@ -40,7 +49,7 @@ def get_location_func(location: str) -> LocationFunc | None:
         host = path[0]
         base_path = "/"
         if len(path) > 1:
-            base_path = path[1]
+            base_path += path[1]
 
         ftp_func = FtpFunc(base_path, host, user, password)
         return ftp_func if ftp_func.check_connection() else None
@@ -48,12 +57,17 @@ def get_location_func(location: str) -> LocationFunc | None:
 
 def main():
     if len(sys.argv) != 3:
+        logging.error("The system accepts only two arguments!")
         return -1
 
     location_func1 = get_location_func(sys.argv[1])
-    location_func2 = get_location_func(sys.argv[2])
+    if location_func1 is None:
+        logging.error("First location provided cannot be accessed")
+        return -1
 
-    if location_func1 is None or location_func2 is None:
+    location_func2 = get_location_func(sys.argv[2])
+    if location_func1 is None:
+        logging.error("Second location provided cannot be accessed")
         return -1
 
     sync_manager = SyncManager(location_func1, location_func2)

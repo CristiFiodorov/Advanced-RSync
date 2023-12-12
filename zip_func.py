@@ -1,3 +1,4 @@
+import logging
 import zipfile
 import os
 from datetime import datetime
@@ -5,6 +6,9 @@ from typing import List
 from location_func import LocationFunc
 from path import Path
 import time
+
+
+logger = logging.getLogger(__name__)
 
 
 class ZipFunc(LocationFunc):
@@ -15,7 +19,8 @@ class ZipFunc(LocationFunc):
         try:
             with zipfile.ZipFile(self.base_path, 'r'):
                 return True
-        except:
+        except Exception as e:
+            logger.error(e)
             return False
 
     def is_dir(self, relative_path: str) -> bool:
@@ -24,7 +29,8 @@ class ZipFunc(LocationFunc):
         try:
             with zipfile.ZipFile(self.base_path, 'r') as zip_file:
                 return zip_file.getinfo(relative_path).is_dir()
-        except:
+        except Exception as e:
+            logger.error(e)
             return False
 
     def get_paths(self) -> List[Path]:
@@ -38,9 +44,9 @@ class ZipFunc(LocationFunc):
                     if is_dir:
                         name = name[:-1]
                     paths.append(Path(name.replace("/", "\\"), mtime, is_dir))
-
             return paths
-        except:
+        except Exception as e:
+            logger.error(e)
             return []
 
     def _make(self, relative_path: str, new_data: bytes) -> float:
@@ -56,7 +62,8 @@ class ZipFunc(LocationFunc):
                     mtime = time.mktime(zip_info.date_time)
 
             return mtime
-        except:
+        except Exception as e:
+            logger.error(e)
             return 0
 
     def mkfile(self, relative_path: str, new_data: bytes) -> float:
@@ -75,13 +82,12 @@ class ZipFunc(LocationFunc):
             with zipfile.ZipFile(self.base_path, 'r') as zip_file:
                 with zipfile.ZipFile(temp_zip_file_path, 'w') as temp_zip_file:
                     for item in zip_file.infolist():
-                        print(item.filename)
                         if (not self.is_dir(relative_path) and item.filename != relative_path) or \
                                 (self.is_dir(relative_path) and not item.filename.startswith(relative_path)):
                             data = zip_file.read(item.filename)
                             temp_zip_file.writestr(item, data)
         except Exception as e:
-            print(e)
+            logger.error(e)
             return False
 
         while True:
@@ -112,5 +118,6 @@ class ZipFunc(LocationFunc):
                 data = zip_file.read(relative_path.replace("\\", "/"))
 
             return data
-        except KeyError:
+        except Exception as e:
+            logger.error(e)
             return None

@@ -1,9 +1,12 @@
 import ftplib
+import logging
 from typing import List
 from ftp_utils import *
 from location_func import LocationFunc
 from path import Path
 from io import BytesIO
+
+logger = logging.getLogger(__name__)
 
 
 class FtpFunc(LocationFunc):
@@ -18,7 +21,7 @@ class FtpFunc(LocationFunc):
             with ftplib.FTP(self.host, self.username, self.password, timeout=10):
                 return True
         except ftplib.all_errors as e:
-            print(e)
+            logger.error(e)
             return False
 
     def is_dir(self, relative_path: str) -> bool:
@@ -32,8 +35,8 @@ class FtpFunc(LocationFunc):
                 is_dir = is_entry_directory(ftp, relative_path)
 
                 return is_dir
-        except Exception as e:
-            print(e)
+        except ftplib.all_errors as e:
+            logger.error(e)
             return False
 
     def get_paths(self) -> List[Path]:
@@ -74,8 +77,8 @@ class FtpFunc(LocationFunc):
                 paths.reverse()
                 return paths
 
-        except Exception as e:
-            print(e)
+        except ftplib.all_errors as e:
+            logger.error(e)
             return []
 
     def mkfile(self, relative_path: str, new_data: bytes) -> float:
@@ -94,12 +97,10 @@ class FtpFunc(LocationFunc):
                 timestamp = ftp.sendcmd(f"MDTM {abs_path}")[4:]
                 mtime = get_unix_timestamp(timestamp)
 
-                print(f"File '{abs_path}'was created on the FTP server.")
-
                 return mtime
 
-        except Exception as e:
-            print(f"mkfile {relative_path}: {e}")
+        except ftplib.all_errors as e:
+            logger.error(e)
             return 0
 
     def mkdir(self, relative_path: str) -> float:
@@ -117,12 +118,10 @@ class FtpFunc(LocationFunc):
                 timestamp = ftp.sendcmd(f"MDTM {abs_path}")[4:]
                 mtime = get_unix_timestamp(timestamp)
 
-                print(f"Folder '{abs_path}' created on the FTP server.")
-
                 return mtime
 
-        except Exception as e:
-            print(f"mkdir: {e}")
+        except ftplib.all_errors as e:
+            logger.error(e)
             return 0
 
     def delete_dir(self, relative_path: str) -> bool:
@@ -136,10 +135,8 @@ class FtpFunc(LocationFunc):
 
                 recursive_ftp_delete(ftp, self.base_path + "/" + relative_path)
 
-                print(f"Folder '{relative_path}' deleted from the FTP server.")
-
-        except Exception as e:
-            print(e)
+        except ftplib.all_errors as e:
+            logger.error(e)
             return False
 
         return True
@@ -156,10 +153,8 @@ class FtpFunc(LocationFunc):
 
                 ftp.delete(abs_path)
 
-                print(f"File '{abs_path}' deleted from the FTP server.")
-
-        except Exception as e:
-            print(e)
+        except ftplib.all_errors as e:
+            logger.error(e)
             return False
 
         return True
@@ -183,12 +178,10 @@ class FtpFunc(LocationFunc):
                 timestamp = ftp.sendcmd(f"MDTM {abs_path}")[4:]
                 mtime = get_unix_timestamp(timestamp)
 
-                print(f"File '{abs_path}' was modified on the FTP server.")
-
                 return mtime
 
-        except Exception as e:
-            print(e)
+        except ftplib.all_errors as e:
+            logger.error(e)
             return 0
 
     def get_data(self, relative_path: str) -> None | bytes:
@@ -206,6 +199,6 @@ class FtpFunc(LocationFunc):
 
                 return r.getvalue()
 
-        except Exception as e:
-            print(e)
+        except ftplib.all_errors as e:
+            logger.error(e)
             return None

@@ -8,7 +8,7 @@ import sys
 
 logging.basicConfig(
         level=logging.DEBUG,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        format='%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s',
         filename='advanced_rsync.log',
         filemode='w'
     )

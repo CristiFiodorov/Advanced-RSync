@@ -78,7 +78,7 @@ class ZipFunc(LocationFunc):
         if not self.check_connection():
             return False
         try:
-            temp_zip_file_path = os.path.expanduser(f"{self.base_path}temp")
+            temp_zip_file_path = f"{self.base_path}temp"
             with zipfile.ZipFile(self.base_path, 'r') as zip_file:
                 with zipfile.ZipFile(temp_zip_file_path, 'w') as temp_zip_file:
                     for item in zip_file.infolist():

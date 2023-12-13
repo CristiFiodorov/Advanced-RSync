@@ -194,10 +194,9 @@ class FtpFunc(LocationFunc):
                 ftp.login(self.username, self.password)
                 abs_path = self.base_path + "/" + relative_path
 
-                r = BytesIO()
-                ftp.retrbinary(f'RETR {abs_path}', r.write)
-
-                return r.getvalue()
+                with BytesIO() as binary_data:
+                    ftp.retrbinary(f'RETR {abs_path}', binary_data.write)
+                    return binary_data.getvalue()
 
         except ftplib.all_errors as e:
             logger.error(e)

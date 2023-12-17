@@ -4,6 +4,14 @@ from typing import List, Tuple
 
 
 class ModificationType(Enum):
+    """
+    Enum for all types of modification available
+
+    Attributes:
+        MOD (int): Represents modification.
+        DEL (int): Represents deletion.
+        MK (int): Represents creation.
+    """
     MOD = auto()
     DEL = auto()
     MK = auto()
@@ -18,7 +26,7 @@ def find_changes(location_func: LocationFunc, files_map: dict, number: int) -> L
         [mtime1, mtime2, is_dir]
     :type files_map: dict
     :param number: The index of the location in files_map values
-    :return:
+    :return: a list with the changes represented as a tuple(file_path, mtime, ModificationType, is_dir)
     """
     result_mod, result_del, result_mk = [], [], []
     items1 = [*files_map.items()]

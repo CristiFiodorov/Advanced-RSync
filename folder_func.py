@@ -1,7 +1,7 @@
 import os
 import logging
 from typing import List
-from file_utils import wait_file
+from folder_utils import wait_file
 import time
 from location_func import LocationFunc
 from path import Path
@@ -12,7 +12,16 @@ logger = logging.getLogger(__name__)
 
 
 class FolderFunc(LocationFunc):
-    def __init__(self, base_path):
+    """
+    A class that has functionality for working with files/folders from a specific folder in our file system.
+    """
+    def __init__(self, base_path: str):
+        """
+        Initialize a new FolderFunc instance
+
+        :param base_path: path to the folder that is located on our file system
+        :type base_path: str
+        """
         super().__init__(base_path)
 
     def check_connection(self) -> bool:

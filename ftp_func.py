@@ -11,7 +11,22 @@ logger = logging.getLogger(__name__)
 
 
 class FtpFunc(LocationFunc):
+    """
+    A class that has functionality for working with files/folders from a specific folder on a ftp server.
+    """
     def __init__(self, base_path: str, host: str, username: str, password: str):
+        """
+        Initialize a new FtpFunc instance
+
+        :param base_path: path to the folder located on the ftp server
+        :type base_path: str
+        :param host: host name of ftp server
+        :type host: str
+        :param username: username used to connect to ftp server
+        :type username: str
+        :param password: password used to connect to ftp server
+        :type password: str
+        """
         super().__init__(base_path)
         self.host = host
         self.username = username

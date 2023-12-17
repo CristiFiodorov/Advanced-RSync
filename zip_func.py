@@ -121,3 +121,4 @@ class ZipFunc(LocationFunc):
         except Exception as e:
             logger.error(e)
             return None
+        

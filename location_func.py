@@ -1,11 +1,16 @@
+from abc import abstractmethod, ABC
 from typing import List
 from path import Path
 
 
-class LocationFunc:
+class LocationFunc(ABC):
+    """
+    Abstract base class for functionalities for locations where files can be stored
+    """
     def __init__(self, base_path: str):
         self.base_path = base_path
 
+    @abstractmethod
     def check_connection(self) -> bool:
         """
         This method checks the connection with the location.
@@ -13,6 +18,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def is_dir(self, relative_path: str) -> bool:
         """
         This method checks if the path given is a directory
@@ -22,6 +28,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def get_paths(self) -> List[Path]:
         """
         This method returns a list with all the paths that are in the location
@@ -29,6 +36,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def mkfile(self, relative_path: str, new_data: bytes) -> float:
         """
         This method is used to create a new file
@@ -40,6 +48,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def mkdir(self, relative_path: str) -> float:
         """
         This method is used to create a new directory
@@ -49,6 +58,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def delete_dir(self, relative_path: str) -> bool:
         """
         This method is used to delete a directory
@@ -58,6 +68,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def delete_file(self, relative_path: str) -> bool:
         """
         This method is used to delete a file
@@ -67,6 +78,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def replace(self, relative_path: str, new_data: bytes) -> float:
         """
         This method is used to replace data from a file that is located to relative_path
@@ -78,6 +90,7 @@ class LocationFunc:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def get_data(self, relative_path: str) -> None | bytes:
         """
         This method extracts data from a file

@@ -8,11 +8,20 @@ from path import Path
 import time
 
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class ZipFunc(LocationFunc):
+    """
+    A class that has functionality for working with files/folders from a specific zip file in our file system.
+    """
     def __init__(self, base_path: str):
+        """
+        Initialize a new ZipFunc instance
+
+        :param base_path: path to the zip file that is located on our file system
+        :type base_path: str
+        """
         super().__init__(base_path)
 
     def check_connection(self) -> bool:
@@ -20,7 +29,7 @@ class ZipFunc(LocationFunc):
             with zipfile.ZipFile(self.base_path, 'r'):
                 return True
         except Exception as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
     def is_dir(self, relative_path: str) -> bool:
@@ -30,7 +39,7 @@ class ZipFunc(LocationFunc):
             with zipfile.ZipFile(self.base_path, 'r') as zip_file:
                 return zip_file.getinfo(relative_path).is_dir()
         except Exception as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
     def get_paths(self) -> List[Path]:
@@ -46,7 +55,7 @@ class ZipFunc(LocationFunc):
                     paths.append(Path(name.replace("/", "\\"), mtime, is_dir))
             return paths
         except Exception as e:
-            logger.error(e)
+            _logger.error(e)
             return []
 
     def _make(self, relative_path: str, new_data: bytes) -> float:
@@ -63,7 +72,7 @@ class ZipFunc(LocationFunc):
 
             return mtime
         except Exception as e:
-            logger.error(e)
+            _logger.error(e)
             return 0
 
     def mkfile(self, relative_path: str, new_data: bytes) -> float:
@@ -87,7 +96,7 @@ class ZipFunc(LocationFunc):
                             data = zip_file.read(item.filename)
                             temp_zip_file.writestr(item, data)
         except Exception as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
         while True:
@@ -119,6 +128,5 @@ class ZipFunc(LocationFunc):
 
             return data
         except Exception as e:
-            logger.error(e)
+            _logger.error(e)
             return None
-        

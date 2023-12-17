@@ -55,7 +55,7 @@ def get_location_func(location: str) -> LocationFunc | None:
         return ftp_func if ftp_func.check_connection() else None
 
 
-def main():
+def _main():
     if len(sys.argv) != 3:
         logging.error("The system accepts only two arguments!")
         return -1
@@ -75,4 +75,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    _main()

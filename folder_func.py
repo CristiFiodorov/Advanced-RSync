@@ -8,7 +8,7 @@ from path import Path
 import shutil
 
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class FolderFunc(LocationFunc):
@@ -83,7 +83,7 @@ class FolderFunc(LocationFunc):
 
             return os.path.getmtime(abs_path)
         except FileNotFoundError as e:
-            logger.error(str(e))
+            _logger.error(str(e))
             return 0
 
     def _delete(self, relative_path: str) -> bool:

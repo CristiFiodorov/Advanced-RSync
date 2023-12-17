@@ -7,7 +7,7 @@ from location_func import LocationFunc
 from path import Path
 from io import BytesIO
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class FtpFunc(LocationFunc):
@@ -37,7 +37,7 @@ class FtpFunc(LocationFunc):
             with ftplib.FTP(self.host, self.username, self.password, timeout=10):
                 return True
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
     def is_dir(self, relative_path: str) -> bool:
@@ -48,7 +48,7 @@ class FtpFunc(LocationFunc):
                 ftp.login(self.username, self.password)
                 return is_entry_directory(ftp, relative_path)
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
     def get_paths(self) -> List[Path]:
@@ -90,7 +90,7 @@ class FtpFunc(LocationFunc):
                 return paths
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return []
 
     def mkfile(self, relative_path: str, new_data: bytes) -> float:
@@ -112,7 +112,7 @@ class FtpFunc(LocationFunc):
                 return mtime
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return 0
 
     def mkdir(self, relative_path: str) -> float:
@@ -133,7 +133,7 @@ class FtpFunc(LocationFunc):
                 return mtime
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return 0
 
     def delete_dir(self, relative_path: str) -> bool:
@@ -148,7 +148,7 @@ class FtpFunc(LocationFunc):
                 recursive_ftp_delete(ftp, self.base_path + "/" + relative_path)
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
         return True
@@ -166,7 +166,7 @@ class FtpFunc(LocationFunc):
                 ftp.delete(abs_path)
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return False
 
         return True
@@ -193,7 +193,7 @@ class FtpFunc(LocationFunc):
                 return mtime
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return 0
 
     def get_data(self, relative_path: str) -> None | bytes:
@@ -211,5 +211,5 @@ class FtpFunc(LocationFunc):
                     return binary_data.getvalue()
 
         except ftplib.all_errors as e:
-            logger.error(e)
+            _logger.error(e)
             return None

@@ -51,20 +51,22 @@ class SyncManager:
                     self.files_map[path1.name][1] = self.location_func[1].mkdir(path1.name)
                 else:
                     data = self.location_func[0].get_data(path1.name)
-                    self.files_map[path1.name][1] = self.location_func[1].mkfile(path1.name, data)
+                    if data:
+                        self.files_map[path1.name][1] = self.location_func[1].mkfile(path1.name, data)
 
         path1_names = [path.name for path in paths1]
         for path2 in paths2:
             if path2.name not in path1_names:
                 # file/folder exists only in path2 not in path1
                 logger.info(f"File/Folder {path2.name} exists only in {self.location_func[1].base_path}. "
-                            f"{path2.name} will be copied to {self.location_func[2].base_path}")
+                            f"{path2.name} will be copied to {self.location_func[0].base_path}")
                 self.files_map[path2.name] = [0, path2.mtime, path2.is_dir]
                 if path2.is_dir:
                     self.files_map[path2.name][0] = self.location_func[0].mkdir(path2.name)
                 else:
                     data = self.location_func[1].get_data(path2.name)
-                    self.files_map[path2.name][0] = self.location_func[0].mkfile(path2.name, data)
+                    if data:
+                        self.files_map[path2.name][0] = self.location_func[0].mkfile(path2.name, data)
 
     def _sync_location(self, number: int):
         other_number = 1 if number == 0 else 0
@@ -73,7 +75,6 @@ class SyncManager:
         if len(changes) == 0:
             return
 
-        print(number, changes)
         logger.info(f"Location {self.location_func[number].base_path} has the following changes: {changes}")
 
         for file_name, mtime, mod, is_dir in changes:

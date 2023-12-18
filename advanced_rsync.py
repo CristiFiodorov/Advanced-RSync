@@ -66,7 +66,7 @@ def _main():
         return -1
 
     location_func2 = get_location_func(sys.argv[2])
-    if location_func1 is None:
+    if location_func2 is None:
         logging.error("Second location provided cannot be accessed")
         return -1
 

@@ -2,7 +2,7 @@ import ftplib
 import logging
 from typing import List
 from ftp_utils import *
-from utils import *
+from utils import mdtm_utc_to_unix_timestamp_localtime
 from location_func import LocationFunc
 from path import Path
 from io import BytesIO
@@ -72,7 +72,7 @@ class FtpFunc(LocationFunc):
                             abs_path = abs_path[1:]
 
                         mdtm = ftp.sendcmd(f"MDTM {abs_path}")[4:]
-                        mtime = mdtm_to_unix_timestamp(mdtm)
+                        mtime = mdtm_utc_to_unix_timestamp_localtime(mdtm)
 
                         path = Path(abs_path.replace("/", "\\")[1:], mtime, False)
 
@@ -107,7 +107,7 @@ class FtpFunc(LocationFunc):
                     ftp.storbinary(f'STOR {abs_path}', binary_data)
 
                 mdtm = ftp.sendcmd(f"MDTM {abs_path}")[4:]
-                mtime = mdtm_to_unix_timestamp(mdtm)
+                mtime = mdtm_utc_to_unix_timestamp_localtime(mdtm)
 
                 return mtime
 
@@ -128,7 +128,7 @@ class FtpFunc(LocationFunc):
                 ftp.mkd(abs_path)
 
                 mdtm = ftp.sendcmd(f"MDTM {abs_path}")[4:]
-                mtime = mdtm_to_unix_timestamp(mdtm)
+                mtime = mdtm_utc_to_unix_timestamp_localtime(mdtm)
 
                 return mtime
 
@@ -188,7 +188,7 @@ class FtpFunc(LocationFunc):
                     ftp.storbinary(f'STOR {abs_path}', binary_data)
 
                 mdtm = ftp.sendcmd(f"MDTM {abs_path}")[4:]
-                mtime = mdtm_to_unix_timestamp(mdtm)
+                mtime = mdtm_utc_to_unix_timestamp_localtime(mdtm)
 
                 return mtime
 
